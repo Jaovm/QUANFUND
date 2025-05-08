@@ -30,6 +30,12 @@ __email__ = ""
 
 # --- Inicialização de Clientes e Módulos --- 
 
+st.set_page_config(
+    layout="wide",
+    page_title="Análise de Investimentos PRO"
+)
+
+# ... seus outros imports e código ...
 @st.cache_resource
 def get_yahoo_finance_client():
     try:
