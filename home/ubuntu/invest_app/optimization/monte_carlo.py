@@ -118,7 +118,7 @@ class MonteCarloOptimizer:
         elif metric == "Volatilidade":
             optimal_portfolio_row = self.results_df.iloc[self.results_df["Volatilidade"].idxmin()]
         else:
-            print(f"Métrica 
+            print("Métrica 
 {metric}" não suportada. Use 'SharpeRatio' ou 'Volatilidade'.")
             return None, None
 
