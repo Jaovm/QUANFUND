@@ -195,9 +195,9 @@ def portfolio_optimization_section_logic(): # Renomeado para evitar conflito e m
                         max_sharpe_port = simulation_df.loc[simulation_df["SharpeRatio"].idxmax()]
                         min_vol_port = simulation_df.loc[simulation_df["Volatilidade"].idxmin()]
                         fig.add_scatter(x=[max_sharpe_port["Volatilidade"]], y=[max_sharpe_port["Retorno"]], mode="markers", 
-                                        marker=dict(color=\"red\", size=12, symbol=\"star\"), name="Max Sharpe")
+                                        marker=dict(color="red", size=12, symbol="star"), name="Max Sharpe")
                         fig.add_scatter(x=[min_vol_port["Volatilidade"]], y=[min_vol_port["Retorno"]], mode="markers", 
-                                        marker=dict(color=\"blue\", size=12, symbol=\"diamond\"), name="Min Volatilidade")
+                                        marker=dict(color="blue", size=12, symbol="diamond"), name="Min Volatilidade")
                         st.plotly_chart(fig, use_container_width=True)
                     except ImportError:
                         st.warning("Plotly não instalado. Gráfico não pode ser exibido. Tente: pip install plotly")
