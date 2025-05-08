@@ -31,6 +31,83 @@ __email__ = ""
 # --- Inicialização de Clientes e Módulos --- 
 def main():
     st.set_page_config(layout="wide", page_title="Análise de Investimentos PRO")
+    st.markdown("---_---")
+    st.markdown("**Observações:**")
+    st.markdown("- Os retornos esperados e a volatilidade são baseados em dados históricos e não garantem performance futura.")
+    st.markdown("- A taxa livre de risco é usada para calcular o Índice de Sharpe.")
+    st.markdown("- Para Markowitz com Retorno Alvo, certifique-se que o alvo é factível com base nos retornos históricos dos ativos.")
+
+# --- Função Principal --- 
+
+
+    st.title("Plataforma Avançada de Análise de Investimentos em Ações Brasileiras")
+    st.caption(f"Versão {__version__}")
+
+    st.sidebar.header("Navegação")
+    app_mode = st.sidebar.selectbox(
+        "Selecione o Módulo",
+        [
+            "Visão Geral",
+            "1. Backtest de Carteira",
+            "2. Recomendações por Cenário",
+            "3. Sugestão de Aportes",
+            "4. Análise de Valuation",
+            "5. Otimização de Carteira",
+        ],
+        key="main_app_mode_selector"
+    )
+
+    st.sidebar.markdown("---_---")
+    st.sidebar.subheader("Configurações Globais")
+    # A chave FMP é opcional. Se fornecida, o cliente OtherAPIs será atualizado.
+    # api_key_fmp = st.sidebar.text_input("Chave API Financial Modeling Prep (Opcional)", type="password", key="fmp_api_key_input_main")
+    
+    # Instanciar other_api_cli e macro_analyzer aqui, após a sidebar ser renderizada
+    # para que a chave FMP possa ser usada se fornecida.
+    # No entanto, para @st.cache_resource, a inicialização acontece uma vez. 
+    # Se a chave FMP for dinâmica, o cache precisa ser gerenciado ou o cliente recriado.
+    # Por simplicidade, vamos instanciar com None se não houver chave.
+    other_api_cli = get_other_api_client(fmp_api_key=None) # Passar api_key_fmp se descomentado e preenchido
+    macro_economic_analyzer_instance = get_macro_economic_analyzer(other_api_cli)
+
+    if app_mode == "Visão Geral":
+        st.header("Bem-vindo à Plataforma de Análise de Investimentos!")
+        st.markdown("""
+            Esta plataforma integra diversas ferramentas para auxiliar na tomada de decisão de investimentos
+            em ações brasileiras. Utilize o menu lateral para navegar entre os módulos.
+            
+            **Funcionalidades:**
+            - **Backtest de Carteira:** Analise o desempenho histórico de sua carteira comparado a benchmarks.
+            - **Recomendações por Cenário:** Receba sugestões de setores e ações com base no cenário macroeconômico.
+            - **Sugestão de Aportes:** Otimize seus aportes com base na sua carteira atual e oportunidades de mercado.
+            - **Análise de Valuation:** Avalie ações utilizando múltiplas metodologias (DCF, Múltiplos, Graham, etc.).
+            - **Otimização de Carteira:** Construa carteiras otimizadas com modelos como Markowitz, HRP, e mais.
+            
+            Comece selecionando um módulo na barra lateral.
+            """
+        )
+
+    elif app_mode == "1. Backtest de Carteira":
+        components.render_backtest_section(yf_client)
+
+    elif app_mode == "2. Recomendações por Cenário":
+        components.render_macro_recommendation_section(macro_economic_analyzer_instance)
+
+    elif app_mode == "3. Sugestão de Aportes":
+        components.render_contribution_suggestion_section(yf_client, macro_economic_analyzer_instance, PortfolioSuggestor, ValuationModels)
+
+    elif app_mode == "4. Análise de Valuation":
+        components.render_valuation_section(yf_client, ValuationModels)
+
+    elif app_mode == "5. Otimização de Carteira":
+        # A lógica de otimização de carteira é complexa e tem seus próprios inputs, 
+        # então mantê-la aqui ou em components.py é uma escolha de design.
+        # Por ora, a lógica principal está aqui para fácil acesso, mas poderia ser movida.
+        portfolio_optimization_section_logic()
+
+    st.sidebar.markdown("---_---")
+    st.sidebar.info("Desenvolvido por Manus AI Agent")
+
 
 # ... seus outros imports e código ...
 @st.cache_resource
@@ -227,82 +304,6 @@ def portfolio_optimization_section_logic(): # Renomeado para evitar conflito e m
         else:
             st.error("Otimização falhou ou não produziu resultados válidos.")
 
-    st.markdown("---_---")
-    st.markdown("**Observações:**")
-    st.markdown("- Os retornos esperados e a volatilidade são baseados em dados históricos e não garantem performance futura.")
-    st.markdown("- A taxa livre de risco é usada para calcular o Índice de Sharpe.")
-    st.markdown("- Para Markowitz com Retorno Alvo, certifique-se que o alvo é factível com base nos retornos históricos dos ativos.")
-
-# --- Função Principal --- 
-
-
-    st.title("Plataforma Avançada de Análise de Investimentos em Ações Brasileiras")
-    st.caption(f"Versão {__version__}")
-
-    st.sidebar.header("Navegação")
-    app_mode = st.sidebar.selectbox(
-        "Selecione o Módulo",
-        [
-            "Visão Geral",
-            "1. Backtest de Carteira",
-            "2. Recomendações por Cenário",
-            "3. Sugestão de Aportes",
-            "4. Análise de Valuation",
-            "5. Otimização de Carteira",
-        ],
-        key="main_app_mode_selector"
-    )
-
-    st.sidebar.markdown("---_---")
-    st.sidebar.subheader("Configurações Globais")
-    # A chave FMP é opcional. Se fornecida, o cliente OtherAPIs será atualizado.
-    # api_key_fmp = st.sidebar.text_input("Chave API Financial Modeling Prep (Opcional)", type="password", key="fmp_api_key_input_main")
-    
-    # Instanciar other_api_cli e macro_analyzer aqui, após a sidebar ser renderizada
-    # para que a chave FMP possa ser usada se fornecida.
-    # No entanto, para @st.cache_resource, a inicialização acontece uma vez. 
-    # Se a chave FMP for dinâmica, o cache precisa ser gerenciado ou o cliente recriado.
-    # Por simplicidade, vamos instanciar com None se não houver chave.
-    other_api_cli = get_other_api_client(fmp_api_key=None) # Passar api_key_fmp se descomentado e preenchido
-    macro_economic_analyzer_instance = get_macro_economic_analyzer(other_api_cli)
-
-    if app_mode == "Visão Geral":
-        st.header("Bem-vindo à Plataforma de Análise de Investimentos!")
-        st.markdown("""
-            Esta plataforma integra diversas ferramentas para auxiliar na tomada de decisão de investimentos
-            em ações brasileiras. Utilize o menu lateral para navegar entre os módulos.
-            
-            **Funcionalidades:**
-            - **Backtest de Carteira:** Analise o desempenho histórico de sua carteira comparado a benchmarks.
-            - **Recomendações por Cenário:** Receba sugestões de setores e ações com base no cenário macroeconômico.
-            - **Sugestão de Aportes:** Otimize seus aportes com base na sua carteira atual e oportunidades de mercado.
-            - **Análise de Valuation:** Avalie ações utilizando múltiplas metodologias (DCF, Múltiplos, Graham, etc.).
-            - **Otimização de Carteira:** Construa carteiras otimizadas com modelos como Markowitz, HRP, e mais.
-            
-            Comece selecionando um módulo na barra lateral.
-            """
-        )
-
-    elif app_mode == "1. Backtest de Carteira":
-        components.render_backtest_section(yf_client)
-
-    elif app_mode == "2. Recomendações por Cenário":
-        components.render_macro_recommendation_section(macro_economic_analyzer_instance)
-
-    elif app_mode == "3. Sugestão de Aportes":
-        components.render_contribution_suggestion_section(yf_client, macro_economic_analyzer_instance, PortfolioSuggestor, ValuationModels)
-
-    elif app_mode == "4. Análise de Valuation":
-        components.render_valuation_section(yf_client, ValuationModels)
-
-    elif app_mode == "5. Otimização de Carteira":
-        # A lógica de otimização de carteira é complexa e tem seus próprios inputs, 
-        # então mantê-la aqui ou em components.py é uma escolha de design.
-        # Por ora, a lógica principal está aqui para fácil acesso, mas poderia ser movida.
-        portfolio_optimization_section_logic()
-
-    st.sidebar.markdown("---_---")
-    st.sidebar.info("Desenvolvido por Manus AI Agent")
 
 if __name__ == "__main__":
     main()
