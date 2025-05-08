@@ -29,11 +29,8 @@ __author__ = "Manus AI Agent"
 __email__ = ""
 
 # --- Inicialização de Clientes e Módulos --- 
-
-st.set_page_config(
-    layout="wide",
-    page_title="Análise de Investimentos PRO"
-)
+def main():
+    st.set_page_config(layout="wide", page_title="Análise de Investimentos PRO")
 
 # ... seus outros imports e código ...
 @st.cache_resource
@@ -238,8 +235,7 @@ def portfolio_optimization_section_logic(): # Renomeado para evitar conflito e m
 
 # --- Função Principal --- 
 
-def main():
-    st.set_page_config(layout="wide", page_title="Análise de Investimentos PRO")
+
     st.title("Plataforma Avançada de Análise de Investimentos em Ações Brasileiras")
     st.caption(f"Versão {__version__}")
 
