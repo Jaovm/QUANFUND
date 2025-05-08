@@ -142,10 +142,9 @@ class OtherAPIs:
                                 continue
                             valid_data.append({"Year": year, "Value": float(value), "Indicator": indicator_code, "Country": country_iso3})
                     except ValueError:
-                        print("Aviso: Não foi possível converter o ano" 
-{year_str}" ou valor 
-{value}" para o indicador {indicator_code}")
+                        print(f"Aviso: Não foi possível converter o ano {year_str} ou valor {value} para o indicador {indicator_code}")
                         continue
+    
                 
                 if not valid_data:
                     print(f"Nenhum dado válido encontrado para {indicator_code} ({country_iso3}) no período especificado.")
