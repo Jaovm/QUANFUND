@@ -5,3 +5,4 @@ quantstats
 PyPortfolioOpt
 yfinance
 plotly
+ipython
