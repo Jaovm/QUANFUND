@@ -10,6 +10,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
+st.set_page_config(layout="wide", page_title="Análise de Investimentos PRO")
 # Importar módulos locais
 from data_collection.yahoo_finance_api import YahooFinanceAPI
 from data_collection.other_apis import OtherAPIs
@@ -30,7 +31,7 @@ __email__ = ""
 
 # --- Inicialização de Clientes e Módulos --- 
 def main():
-    st.set_page_config(layout="wide", page_title="Análise de Investimentos PRO")
+    
     st.markdown("---_---")
     st.markdown("**Observações:**")
     st.markdown("- Os retornos esperados e a volatilidade são baseados em dados históricos e não garantem performance futura.")
